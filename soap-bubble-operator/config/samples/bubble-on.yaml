@@ -1,0 +1,16 @@
+apiVersion: soap-bubble-operator.soap-bubble-operator.local/v1alpha1
+kind: SoapBubbleMachine
+metadata:
+  labels:
+    app.kubernetes.io/name: soap-bubble-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: antonio-soap-bubble
+spec:
+  # The name of the machine
+  machineName: antonio-soap-bubble
+  # The url to start the soap bubble machine
+  startURL: "http://192.168.1.200:80/on"
+  # The url to stop the soap bubble machine
+  stopURL: "http://192.168.1.200:80/off"
+  # The state of the machine
+  state: "on"

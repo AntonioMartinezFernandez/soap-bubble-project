@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- soap-bubble-operator_v1alpha1_soapbubblemachine.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples
