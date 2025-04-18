@@ -19,6 +19,8 @@ package controller
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -69,10 +71,9 @@ func (r *SoapBubbleMachineReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	if !soapBubbleMachine.GetDeletionTimestamp().IsZero() {
 
 		//! Process resource deletion
-		err := dispatchResourceDeletion(reconcileID)
+		err := r.dispatchResourceDeletion(ctx, reconcileID, soapBubbleMachine)
 		if err != nil {
 			log.Error(err, "error during deletion", "name", soapBubbleMachine.Name)
-			return ctrl.Result{}, err
 		}
 
 		if controllerutil.RemoveFinalizer(&soapBubbleMachine, soapBubbleMachineControllerFinalizer) {
@@ -96,10 +97,10 @@ func (r *SoapBubbleMachineReconciler) Reconcile(ctx context.Context, req ctrl.Re
 	}
 
 	//! Process resource upsert
-	err := dispatchResourceUpsert(reconcileID)
+	err := r.dispatchResourceUpsert(ctx, reconcileID, soapBubbleMachine)
 	if err != nil {
 		log.Error(err, "error during upsert", "name", soapBubbleMachine.Name)
-		return ctrl.Result{}, err
+		return ctrl.Result{RequeueAfter: 3 * time.Second}, err
 	}
 
 	log.Info("soapBubbleMachine reconciled", "Namespace", req.Namespace, "Name", req.Name)
@@ -116,20 +117,69 @@ func (r *SoapBubbleMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func dispatchResourceDeletion(uniqueID string) error {
-	fmt.Printf("⏳ EXECUTING DELETE 'SOAP BUBBLE MACHINE' PROCESS %s\n", uniqueID)
+func (r *SoapBubbleMachineReconciler) dispatchResourceDeletion(_ context.Context, reconcileID string, soapBubbleMachine soapbubbleoperatorv1alpha1.SoapBubbleMachine) error {
+	fmt.Printf("⏳ EXECUTING DELETE 'SOAP BUBBLE MACHINE' PROCESS %s\n", reconcileID)
 
-	//! TODO: Switch off the machine and delete the resource
+	httpClient := &http.Client{
+		Timeout: 5 * time.Second,
+	}
 
-	fmt.Printf("✅ DELETE 'SOAP BUBBLE MACHINE' PROCESS %s FINISHED\n", uniqueID)
+	resp, err := httpClient.Get(soapBubbleMachine.Spec.StopURL)
+	if err != nil {
+		return fmt.Errorf("failed to send stop request: %w", err)
+	}
+	defer resp.Body.Close()
+	fmt.Printf("switch off response status code: %d\n", resp.StatusCode)
+
+	fmt.Printf("✅ DELETE 'SOAP BUBBLE MACHINE' PROCESS %s FINISHED\n", reconcileID)
 	return nil
 }
 
-func dispatchResourceUpsert(uniqueID string) error {
-	fmt.Printf("⏳ EXECUTING CREATE/UPDATE 'SOAP BUBBLE MACHINE' PROCESS %s\n", uniqueID)
+func (r *SoapBubbleMachineReconciler) dispatchResourceUpsert(ctx context.Context, reconcileID string, soapBubbleMachine soapbubbleoperatorv1alpha1.SoapBubbleMachine) error {
+	fmt.Printf("⏳ EXECUTING CREATE/UPDATE 'SOAP BUBBLE MACHINE' PROCESS %s\n", reconcileID)
 
-	//! TODO: Get the desired state of the machine, switch on/off the machine and create/update the resource
+	httpClient := &http.Client{
+		Timeout: 5 * time.Second,
+	}
 
-	fmt.Printf("✅ CREATE/UPDATE 'SOAP BUBBLE MACHINE' PROCESS %s FINISHED\n", uniqueID)
+	// Switch on the soap bubble machine
+	if soapBubbleMachine.Spec.MakeBubbles && !soapBubbleMachine.Status.MakingBubbles {
+		resp, err := httpClient.Get(soapBubbleMachine.Spec.StartURL)
+		if err != nil {
+			return fmt.Errorf("failed to send start request: %w", err)
+		}
+		defer resp.Body.Close()
+		fmt.Printf("start bubble machine response status code: %d\n", resp.StatusCode)
+
+		soapBubbleMachineCopy := soapBubbleMachine.DeepCopy() // avoid mutating the cached object
+		soapBubbleMachineCopy.Status.MakingBubbles = true
+
+		if err := r.Status().Update(ctx, soapBubbleMachineCopy); err != nil {
+			return err
+		}
+	}
+
+	// Switch off the soap bubble machine
+	if !soapBubbleMachine.Spec.MakeBubbles && soapBubbleMachine.Status.MakingBubbles {
+		httpClient := &http.Client{
+			Timeout: 5 * time.Second,
+		}
+
+		resp, err := httpClient.Get(soapBubbleMachine.Spec.StopURL)
+		if err != nil {
+			return fmt.Errorf("failed to send stop request: %w", err)
+		}
+		defer resp.Body.Close()
+		fmt.Printf("stop bubble machine response status code: %d\n", resp.StatusCode)
+
+		soapBubbleMachineCopy := soapBubbleMachine.DeepCopy() // avoid mutating the cached object
+		soapBubbleMachineCopy.Status.MakingBubbles = false
+
+		if err := r.Status().Update(ctx, soapBubbleMachineCopy); err != nil {
+			return err
+		}
+	}
+
+	fmt.Printf("✅ CREATE/UPDATE 'SOAP BUBBLE MACHINE' PROCESS %s FINISHED\n", reconcileID)
 	return nil
 }

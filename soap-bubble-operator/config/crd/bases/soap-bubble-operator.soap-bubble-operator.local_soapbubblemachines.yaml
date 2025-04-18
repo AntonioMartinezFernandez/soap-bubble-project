@@ -41,9 +41,9 @@ spec:
             properties:
               machineName:
                 type: string
+              makeBubbles:
+                type: boolean
               startURL:
-                type: string
-              state:
                 type: string
               stopURL:
                 type: string
@@ -51,8 +51,8 @@ spec:
           status:
             description: SoapBubbleMachineStatus defines the observed state of SoapBubbleMachine.
             properties:
-              state:
-                type: string
+              makingBubbles:
+                type: boolean
             type: object
         type: object
     served: true

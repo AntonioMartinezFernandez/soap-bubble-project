@@ -31,7 +31,7 @@ type SoapBubbleMachineSpec struct {
 	MachineName string `json:"machineName,omitempty"`
 	StartURL    string `json:"startURL,omitempty" validate:"url"`
 	StopURL     string `json:"stopURL,omitempty" validate:"url"`
-	State       string `json:"state,omitempty" validate:"oneof=on off"`
+	MakeBubbles bool   `json:"makeBubbles,omitempty"`
 }
 
 // SoapBubbleMachineStatus defines the observed state of SoapBubbleMachine.
@@ -39,7 +39,7 @@ type SoapBubbleMachineStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	State string `json:"state,omitempty" validate:"oneof=on off"`
+	MakingBubbles bool `json:"makingBubbles,omitempty"`
 }
 
 // +kubebuilder:object:root=true
