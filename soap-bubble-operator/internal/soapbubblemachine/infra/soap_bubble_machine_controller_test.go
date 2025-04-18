@@ -14,11 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controller
+package soapbubblemachineinfra
 
 import (
-	"context"
-
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -28,13 +26,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	soapbubbleoperatorv1alpha1 "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/api/v1alpha1"
+	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/pkg/bus/command"
+	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/pkg/logger"
 )
 
 var _ = Describe("SoapBubbleMachine Controller", func() {
 	Context("When reconciling a resource", func() {
 		const resourceName = "test-resource"
-
-		ctx := context.Background()
 
 		typeNamespacedName := types.NamespacedName{
 			Name:      resourceName,
@@ -68,14 +66,20 @@ var _ = Describe("SoapBubbleMachine Controller", func() {
 		})
 		It("should successfully reconcile the resource", func() {
 			By("Reconciling the created resource")
-			controllerReconciler := &SoapBubbleMachineReconciler{
-				Client: k8sClient,
-				Scheme: k8sClient.Scheme(),
-			}
 
-			_, err := controllerReconciler.Reconcile(ctx, reconcile.Request{
-				NamespacedName: typeNamespacedName,
-			})
+			l := logger.NewNullLogger()
+			controllerReconciler := NewSoapBubbleMachineReconciler(
+				k8sClient,
+				k8sClient.Scheme(),
+				command.InitCommandBus(l),
+				l,
+			)
+
+			_, err := controllerReconciler.Reconcile(
+				ctx, reconcile.Request{
+					NamespacedName: typeNamespacedName,
+				},
+			)
 			Expect(err).NotTo(HaveOccurred())
 			// TODO(user): Add more specific assertions depending on your controller's reconciliation logic.
 			// Example: If you expect a certain status condition after reconciliation, verify it here.

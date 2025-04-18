@@ -36,7 +36,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	soapbubbleoperatorv1alpha1 "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/api/v1alpha1"
-	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/internal/controller"
+	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/cmd/di"
+	soapbubblemachineinfra "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/internal/soapbubblemachine/infra"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -53,6 +54,9 @@ func init() {
 }
 
 func main() {
+	commonServices := di.StartCommonServices()
+	di.InitSoapBubbleServices(commonServices)
+
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
@@ -142,10 +146,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.SoapBubbleMachineReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	if err = soapbubblemachineinfra.NewSoapBubbleMachineReconciler(
+		mgr.GetClient(),
+		mgr.GetScheme(),
+		commonServices.CommandBus,
+		commonServices.Logger,
+	).
+		SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "SoapBubbleMachine")
 		os.Exit(1)
 	}

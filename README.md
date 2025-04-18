@@ -18,11 +18,6 @@
 - kubectl
 - kubebuilder
 
-## Resources
-
-1. https://randomnerdtutorials.com/esp32-vs-code-platformio-littlefs/
-1. https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
-
 ## Kubernetes Operator Creation
 
 1. Scaffold the operator with kubebuilder
@@ -41,3 +36,8 @@ kubebuilder create api --group soap-bubble-operator --version v1alpha1 --kind So
 4. Execute `make manifests`
 5. Execute `make build`
 6. With the kubernetes cluster running, execute `make install`
+
+## Resources
+
+1. https://randomnerdtutorials.com/esp32-vs-code-platformio-littlefs/
+1. https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
