@@ -11,14 +11,31 @@
 
 ### Software
 
-- VSCode
-- PlatformIO
-- Kubernetes Cluster (available with Orbstack or Docker Desktop)
-- Golang
-- kubectl
-- kubebuilder
+IDE:
 
-## Kubernetes Operator Creation
+- [VSCode](https://code.visualstudio.com/)
+
+Containerization/Orchestration:
+
+- [Orbstack (or Docker Desktop)](https://orbstack.dev/)
+
+Programming languages compilers & tools:
+
+- [Rust](https://www.rust-lang.org/tools/install)
+- [Golang](https://go.dev/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [kubebuilder](https://kubebuilder.io/quick-start)
+
+Embedded development tools:
+
+- [PlatformIO](https://platformio.org/install/ide?install=vscode)
+- [espup](https://github.com/esp-rs/espup)
+- [esp-generate](https://github.com/esp-rs/esp-generate)
+- [espflash](https://github.com/esp-rs/espflash/blob/main/cargo-espflash/README.md)
+- [espflash](https://github.com/esp-rs/espflash/blob/main/espflash/README.md)
+- [probe-rs](https://probe.rs/docs/getting-started/installation/)
+
+## How to create a Kubernetes Operator with kubebuilder (basic steps)
 
 1. Scaffold the operator with kubebuilder
 
@@ -39,5 +56,6 @@ kubebuilder create api --group soap-bubble-operator --version v1alpha1 --kind So
 
 ## Resources
 
-1. https://randomnerdtutorials.com/esp32-vs-code-platformio-littlefs/
-1. https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/
+- [LittleFS with ESP32](https://randomnerdtutorials.com/esp32-vs-code-platformio-littlefs/)
+- [WiFi manager with ESP32](https://randomnerdtutorials.com/esp32-wi-fi-manager-asyncwebserver/)
+- [Setting up a MacBook for Rust + ESP32 (video)](https://www.youtube.com/watch?v=o4oTmUozaXA)
