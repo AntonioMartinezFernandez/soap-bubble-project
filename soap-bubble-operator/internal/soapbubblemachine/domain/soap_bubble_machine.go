@@ -40,6 +40,10 @@ func (s *SoapBubbleMachine) Speed() int {
 	return s.speed
 }
 
+func (s *SoapBubbleMachine) SetSpeed(speed int) {
+	s.speed = speed
+}
+
 func (s *SoapBubbleMachine) SwitchON(ctx context.Context, remoteController SoapBubbleMachineRemoteController) error {
 	s.makingBubbles = true
 	return remoteController.SwitchOn(ctx, *s)

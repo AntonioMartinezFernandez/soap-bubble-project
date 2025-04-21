@@ -13,8 +13,14 @@ type SoapBubbleServices struct {
 func InitSoapBubbleServices(commonServices *CommonServices) *SoapBubbleServices {
 	remoteController := soapbubblemachineinfra.NewHttpSoapBubbleMachineRemoteController()
 
-	switchOnSoapBubbleMachineCommandHandler := soapbubblemachineapplication.NewSwitchOnSoapBubbleMachineCommandHandler(remoteController)
-	switchOffSoapBubbleMachineCommandHandler := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommandHandler(remoteController)
+	switchOnSoapBubbleMachineCommandHandler := soapbubblemachineapplication.NewSwitchOnSoapBubbleMachineCommandHandler(
+		remoteController,
+		commonServices.Repositories.SoapBubbleMachine,
+	)
+	switchOffSoapBubbleMachineCommandHandler := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommandHandler(
+		remoteController,
+		commonServices.Repositories.SoapBubbleMachine,
+	)
 
 	soapBubbleModuleServices := &SoapBubbleServices{
 		SwitchOnSoapBubbleMachineCommandHandler:  switchOnSoapBubbleMachineCommandHandler,

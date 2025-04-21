@@ -3,20 +3,17 @@ package soapbubblemachineapplication
 const SwitchOffSoapBubbleMachineCommandType = "switch-off-soap-bubble-machine-command.soap-bubble-operator.local"
 
 type SwitchOffSoapBubbleMachineCommand struct {
-	SoapBubbleMachineID   string
-	SoapBubbleMachineName string
-	SoapBubbleMachineIP   string
+	SoapBubbleMachineID string
+	Namespace           string
 }
 
 func NewSwitchOffSoapBubbleMachineCommand(
 	id,
-	name,
-	ip string,
+	namespace string,
 ) *SwitchOffSoapBubbleMachineCommand {
 	return &SwitchOffSoapBubbleMachineCommand{
-		SoapBubbleMachineID:   id,
-		SoapBubbleMachineName: name,
-		SoapBubbleMachineIP:   ip,
+		SoapBubbleMachineID: id,
+		Namespace:           namespace,
 	}
 }
 

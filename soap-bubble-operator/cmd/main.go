@@ -54,9 +54,6 @@ func init() {
 }
 
 func main() {
-	commonServices := di.StartCommonServices()
-	di.InitSoapBubbleServices(commonServices)
-
 	var metricsAddr string
 	var enableLeaderElection bool
 	var probeAddr string
@@ -146,6 +143,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Instantiate Common and Specific Services
+	commonServices := di.StartCommonServices(mgr.GetClient())
+	di.InitSoapBubbleServices(commonServices)
+
+	// Init Reconciler
 	if err = soapbubblemachineinfra.NewSoapBubbleMachineReconciler(
 		mgr.GetClient(),
 		mgr.GetScheme(),

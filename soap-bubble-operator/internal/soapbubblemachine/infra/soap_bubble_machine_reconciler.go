@@ -31,7 +31,6 @@ import (
 
 	soapbubbleoperatorv1alpha1 "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/api/v1alpha1"
 	soapbubblemachineapplication "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/internal/soapbubblemachine/application"
-	soapbubblemachinedomain "github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/internal/soapbubblemachine/domain"
 	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/pkg/bus/command"
 	"github.com/AntonioMartinezFernandez/soap-bubble-project/soap-bubble-operator/pkg/logger"
 )
@@ -166,6 +165,14 @@ func (r *SoapBubbleMachineReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
+func (r *SoapBubbleMachineReconciler) getMachineIdentifier(ctx context.Context, soapBubbleMachine soapbubbleoperatorv1alpha1.SoapBubbleMachine) (string, error) {
+	machineID, ok := soapBubbleMachine.Labels["machine/identifier"]
+	if !ok {
+		return "", fmt.Errorf("machine/identifier label not found")
+	}
+	return machineID, nil
+}
+
 func (r *SoapBubbleMachineReconciler) deleteSoapBubbleMachine(ctx context.Context, reconcileID string, soapBubbleMachine soapbubbleoperatorv1alpha1.SoapBubbleMachine) error {
 	r.logger.Info(
 		ctx,
@@ -175,10 +182,14 @@ func (r *SoapBubbleMachineReconciler) deleteSoapBubbleMachine(ctx context.Contex
 		slog.String("reconcileID", reconcileID),
 	)
 
+	machineID, err := r.getMachineIdentifier(ctx, soapBubbleMachine)
+	if err != nil {
+		return err
+	}
+
 	switchOffSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommand(
-		soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
-		soapBubbleMachine.Name,
-		soapBubbleMachine.Spec.IP,
+		machineID,
+		soapBubbleMachine.Namespace,
 	)
 
 	if err := r.commandBus.Exec(ctx, switchOffSoapBubbleMachineCommand); err != nil {
@@ -221,13 +232,17 @@ func (r *SoapBubbleMachineReconciler) upsertSoapBubbleMachine(
 		slog.String("reconcileID", reconcileID),
 	)
 
-	// Switch on the soap bubble machine
-	if soapBubbleMachine.Spec.MakeBubbles && !soapBubbleMachine.Status.MakingBubbles {
+	machineID, err := r.getMachineIdentifier(ctx, soapBubbleMachine)
+	if err != nil {
+		return err
+	}
+
+	// Switch on or change speed of the soap bubble machine
+	if soapBubbleMachine.Spec.MakeBubbles {
 		switchOnSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOnSoapBubbleMachineCommand(
-			soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
-			soapBubbleMachine.Name,
-			soapBubbleMachine.Spec.IP,
+			machineID,
 			soapBubbleMachine.Spec.Speed,
+			soapBubbleMachine.Namespace,
 		)
 
 		if err := r.commandBus.Exec(ctx, switchOnSoapBubbleMachineCommand); err != nil {
@@ -245,9 +260,8 @@ func (r *SoapBubbleMachineReconciler) upsertSoapBubbleMachine(
 	// Switch off the soap bubble machine
 	if !soapBubbleMachine.Spec.MakeBubbles && soapBubbleMachine.Status.MakingBubbles {
 		switchOffSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommand(
-			soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
-			soapBubbleMachine.Name,
-			soapBubbleMachine.Spec.IP,
+			machineID,
+			soapBubbleMachine.Namespace,
 		)
 
 		if err := r.commandBus.Exec(ctx, switchOffSoapBubbleMachineCommand); err != nil {

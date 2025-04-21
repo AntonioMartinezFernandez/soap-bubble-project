@@ -3,23 +3,20 @@ package soapbubblemachineapplication
 const SwitchOnSoapBubbleMachineCommandType = "switch-on-soap-bubble-machine-command.soap-bubble-operator.local"
 
 type SwitchOnSoapBubbleMachineCommand struct {
-	SoapBubbleMachineID   string
-	SoapBubbleMachineName string
-	SoapBubbleMachineIP   string
-	Speed                 int
+	SoapBubbleMachineID string
+	Speed               int
+	Namespace           string
 }
 
 func NewSwitchOnSoapBubbleMachineCommand(
-	soapBubbleMachineID,
-	soapBubbleMachineName,
-	ip string,
+	soapBubbleMachineID string,
 	speed int,
+	namespace string,
 ) *SwitchOnSoapBubbleMachineCommand {
 	return &SwitchOnSoapBubbleMachineCommand{
-		SoapBubbleMachineID:   soapBubbleMachineID,
-		SoapBubbleMachineName: soapBubbleMachineName,
-		SoapBubbleMachineIP:   ip,
-		Speed:                 speed,
+		SoapBubbleMachineID: soapBubbleMachineID,
+		Speed:               speed,
+		Namespace:           namespace,
 	}
 }
 

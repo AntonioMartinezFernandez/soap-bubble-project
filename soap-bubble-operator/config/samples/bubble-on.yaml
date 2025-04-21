@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: soap-bubble-operator
     app.kubernetes.io/managed-by: kustomize
+    machine/identifier: 6c9630e7-a7ef-480a-a395-dd33b5ed74af
   name: antonio-soap-bubble-machine
 spec:
   machineName: antonio-soap-bubble-machine

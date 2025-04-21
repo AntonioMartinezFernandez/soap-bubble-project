@@ -8,14 +8,17 @@ import (
 )
 
 type SwitchOnSoapBubbleMachineCommandHandler struct {
-	soapbubblemachineremotecontroller soapbubblemachinedomain.SoapBubbleMachineRemoteController
+	soapBubbleMachineRemoteController soapbubblemachinedomain.SoapBubbleMachineRemoteController
+	soapBubbleMachineRepository       soapbubblemachinedomain.SoapBubbleMachineRepository
 }
 
 func NewSwitchOnSoapBubbleMachineCommandHandler(
 	soapbubblemachineremotecontroller soapbubblemachinedomain.SoapBubbleMachineRemoteController,
+	soapbubblemachinerepository soapbubblemachinedomain.SoapBubbleMachineRepository,
 ) *SwitchOnSoapBubbleMachineCommandHandler {
 	return &SwitchOnSoapBubbleMachineCommandHandler{
-		soapbubblemachineremotecontroller: soapbubblemachineremotecontroller,
+		soapBubbleMachineRemoteController: soapbubblemachineremotecontroller,
+		soapBubbleMachineRepository:       soapbubblemachinerepository,
 	}
 }
 
@@ -28,13 +31,16 @@ func (h *SwitchOnSoapBubbleMachineCommandHandler) Handle(
 		return bus.NewInvalidDto("expected SwitchOnSoapBubbleMachineCommand")
 	}
 
-	soapBubbleMachine := soapbubblemachinedomain.NewSoapBubbleMachine(
+	sbm, err := h.soapBubbleMachineRepository.FindByIdentifier(
+		ctx,
+		switchOnSoapBubbleMachineCommand.Namespace,
 		switchOnSoapBubbleMachineCommand.SoapBubbleMachineID,
-		switchOnSoapBubbleMachineCommand.SoapBubbleMachineName,
-		switchOnSoapBubbleMachineCommand.SoapBubbleMachineIP,
-		true,
-		switchOnSoapBubbleMachineCommand.Speed,
 	)
+	if err != nil {
+		return err
+	}
 
-	return soapBubbleMachine.SwitchON(ctx, h.soapbubblemachineremotecontroller)
+	sbm.SetSpeed(switchOnSoapBubbleMachineCommand.Speed)
+
+	return sbm.SwitchON(ctx, h.soapBubbleMachineRemoteController)
 }
