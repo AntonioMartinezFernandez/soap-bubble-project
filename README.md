@@ -4,10 +4,12 @@
 
 ### Hardware
 
-- ESP32CAM
-- USB-UART adapter
-- USB cable
+- ESP32 WROOM (w/ antenna)
+- IRF520N module
 - Dupont cables
+- USB cable
+- Power Bank
+- Soap Bubble Machine
 
 ### Software
 
@@ -31,7 +33,6 @@ Embedded development tools:
 - [PlatformIO](https://platformio.org/install/ide?install=vscode)
 - [espup](https://github.com/esp-rs/espup)
 - [esp-generate](https://github.com/esp-rs/esp-generate)
-- [espflash](https://github.com/esp-rs/espflash/blob/main/cargo-espflash/README.md)
 - [espflash](https://github.com/esp-rs/espflash/blob/main/espflash/README.md)
 - [probe-rs](https://probe.rs/docs/getting-started/installation/)
 
