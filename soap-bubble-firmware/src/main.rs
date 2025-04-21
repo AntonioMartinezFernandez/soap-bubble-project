@@ -38,6 +38,7 @@ fn main() -> anyhow::Result<()> {
 
     // Initialize main loop
     loop {
-        std::thread::sleep(core::time::Duration::from_secs(10));
+        std::thread::sleep(core::time::Duration::from_secs(30));
+        info!("I'm alive...")
     }
 }
