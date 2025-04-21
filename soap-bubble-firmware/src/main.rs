@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
     info!("WiFi info: {:?}", ip_info);
 
     // Create HTTP server
-    let started_server = start(peripherals.pins);
+    let started_server = start(peripherals.pins, peripherals.ledc);
     if started_server.is_err() {
         info!("Failed to start HTTP server");
     }
