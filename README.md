@@ -54,6 +54,7 @@ Hardware:
 1. Power on the soap bubble machine
 1. Start the soap bubble operator
 1. Interact with the cluster creating/updating/deleting SoapBubbleMachine custom resources
+   - You'll find several definition examples in the `soap-bubble-operator/config/samples` folder
 1. Enjoy! 🎉
 
 ## Additional HOW-TOs
