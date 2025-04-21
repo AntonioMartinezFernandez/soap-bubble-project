@@ -31,10 +31,10 @@ func (h *SwitchOnSoapBubbleMachineCommandHandler) Handle(
 	soapBubbleMachine := soapbubblemachinedomain.NewSoapBubbleMachine(
 		switchOnSoapBubbleMachineCommand.SoapBubbleMachineID,
 		switchOnSoapBubbleMachineCommand.SoapBubbleMachineName,
-		switchOnSoapBubbleMachineCommand.StartURL,
-		switchOnSoapBubbleMachineCommand.StopURL,
-		switchOnSoapBubbleMachineCommand.MakingBubbles,
+		switchOnSoapBubbleMachineCommand.SoapBubbleMachineIP,
+		true,
+		switchOnSoapBubbleMachineCommand.Speed,
 	)
 
-	return h.soapbubblemachineremotecontroller.SwitchOn(ctx, *soapBubbleMachine)
+	return soapBubbleMachine.SwitchON(ctx, h.soapbubblemachineremotecontroller)
 }

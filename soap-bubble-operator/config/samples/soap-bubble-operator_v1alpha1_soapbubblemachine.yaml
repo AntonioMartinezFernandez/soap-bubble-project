@@ -4,13 +4,13 @@ metadata:
   labels:
     app.kubernetes.io/name: soap-bubble-operator
     app.kubernetes.io/managed-by: kustomize
-  name: soapbubblemachine-sample
+  name: sample-soap-bubble-machine
 spec:
   # The name of the machine
-  machineName: soapbubblemachine-sample
-  # The url to start the soap bubble machine
-  startURL: "http://192.168.1.200:80/on"
-  # The url to stop the soap bubble machine
-  stopURL: "http://192.168.1.200:80/off"
+  machineName: sample-soap-bubble-machine
+  # The IP address of the the soap bubble machine
+  ip: 192.168.1.200
   # The desired state of the bubbles machine
   makeBubbles: true
+  # The speed of the bubbles machine
+  speed: 100

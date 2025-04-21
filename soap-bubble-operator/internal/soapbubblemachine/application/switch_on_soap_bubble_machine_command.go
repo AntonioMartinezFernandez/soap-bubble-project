@@ -5,23 +5,21 @@ const SwitchOnSoapBubbleMachineCommandType = "switch-on-soap-bubble-machine-comm
 type SwitchOnSoapBubbleMachineCommand struct {
 	SoapBubbleMachineID   string
 	SoapBubbleMachineName string
-	StartURL              string
-	StopURL               string
-	MakingBubbles         bool
+	SoapBubbleMachineIP   string
+	Speed                 int
 }
 
 func NewSwitchOnSoapBubbleMachineCommand(
 	soapBubbleMachineID,
 	soapBubbleMachineName,
-	startURL, stopURL string,
-	makingBubbles bool,
+	ip string,
+	speed int,
 ) *SwitchOnSoapBubbleMachineCommand {
 	return &SwitchOnSoapBubbleMachineCommand{
 		SoapBubbleMachineID:   soapBubbleMachineID,
 		SoapBubbleMachineName: soapBubbleMachineName,
-		StartURL:              startURL,
-		StopURL:               stopURL,
-		MakingBubbles:         makingBubbles,
+		SoapBubbleMachineIP:   ip,
+		Speed:                 speed,
 	}
 }
 

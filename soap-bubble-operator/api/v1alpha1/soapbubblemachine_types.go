@@ -29,9 +29,9 @@ type SoapBubbleMachineSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	MachineName string `json:"machineName,omitempty"`
-	StartURL    string `json:"startURL,omitempty" validate:"url"`
-	StopURL     string `json:"stopURL,omitempty" validate:"url"`
+	IP          string `json:"ip,omitempty"`
 	MakeBubbles bool   `json:"makeBubbles,omitempty"`
+	Speed       int    `json:"speed,omitempty"`
 }
 
 // SoapBubbleMachineStatus defines the observed state of SoapBubbleMachine.

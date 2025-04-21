@@ -1,20 +1,22 @@
 package soapbubblemachinedomain
 
+import "context"
+
 type SoapBubbleMachine struct {
 	id            string
 	name          string
-	startURL      string
-	stopURL       string
+	ip            string
+	speed         int
 	makingBubbles bool
 }
 
-func NewSoapBubbleMachine(id, name, startURL, stopURL string, makingBubbles bool) *SoapBubbleMachine {
+func NewSoapBubbleMachine(id, name, ip string, makingBubbles bool, speed int) *SoapBubbleMachine {
 	return &SoapBubbleMachine{
 		id:            id,
 		name:          name,
-		startURL:      startURL,
-		stopURL:       stopURL,
+		ip:            ip,
 		makingBubbles: makingBubbles,
+		speed:         speed,
 	}
 }
 
@@ -26,22 +28,24 @@ func (s *SoapBubbleMachine) Name() string {
 	return s.name
 }
 
-func (s *SoapBubbleMachine) StartURL() string {
-	return s.startURL
-}
-
-func (s *SoapBubbleMachine) StopURL() string {
-	return s.stopURL
+func (s *SoapBubbleMachine) IP() string {
+	return s.ip
 }
 
 func (s *SoapBubbleMachine) MakingBubbles() bool {
 	return s.makingBubbles
 }
 
-func (s *SoapBubbleMachine) SwitchON() {
-	s.makingBubbles = true
+func (s *SoapBubbleMachine) Speed() int {
+	return s.speed
 }
 
-func (s *SoapBubbleMachine) SwitchOFF() {
+func (s *SoapBubbleMachine) SwitchON(ctx context.Context, remoteController SoapBubbleMachineRemoteController) error {
+	s.makingBubbles = true
+	return remoteController.SwitchOn(ctx, *s)
+}
+
+func (s *SoapBubbleMachine) SwitchOFF(ctx context.Context, remoteController SoapBubbleMachineRemoteController) error {
 	s.makingBubbles = false
+	return remoteController.SwitchOff(ctx, *s)
 }

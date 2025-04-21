@@ -4,9 +4,9 @@ metadata:
   labels:
     app.kubernetes.io/name: soap-bubble-operator
     app.kubernetes.io/managed-by: kustomize
-  name: antonio-soap-bubble
+  name: antonio-soap-bubble-machine
 spec:
-  machineName: antonio-soap-bubble
-  startURL: "http://192.168.1.200:80/on"
-  stopURL: "http://192.168.1.200:80/off"
+  machineName: antonio-soap-bubble-machine
+  ip: 192.168.1.200
   makeBubbles: false
+  speed: 0

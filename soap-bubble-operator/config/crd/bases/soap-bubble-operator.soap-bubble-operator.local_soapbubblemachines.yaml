@@ -39,14 +39,14 @@ spec:
           spec:
             description: SoapBubbleMachineSpec defines the desired state of SoapBubbleMachine.
             properties:
+              ip:
+                type: string
               machineName:
                 type: string
               makeBubbles:
                 type: boolean
-              startURL:
-                type: string
-              stopURL:
-                type: string
+              speed:
+                type: integer
             type: object
           status:
             description: SoapBubbleMachineStatus defines the observed state of SoapBubbleMachine.

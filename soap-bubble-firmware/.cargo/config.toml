@@ -1,0 +1,22 @@
+[build]
+target = "xtensa-esp32-espidf"
+
+[target.xtensa-esp32-espidf]
+linker = "ldproxy"
+runner = "espflash flash --monitor"
+rustflags = ["--cfg", "espidf_time64"]
+
+[unstable]
+build-std = ["std", "panic_abort"]
+
+[env]
+# Note: this variable is not used by the pio builder (`cargo build --features pio`)
+ESP_IDF_VERSION = "v5.2.3"
+MCU = "esp32"
+
+# WiFi network config
+WIFI_SSID = "my-wifi"
+WIFI_PASSWORD = "my-wifi-password"
+DEVICE_IP = "192.168.1.200"
+GATEWAY_IP = "192.168.1.1"
+GATEWAY_NETMASK = "24" # Expects a number between 0 and 32 (24 is equivalent to 255.255.255.0)

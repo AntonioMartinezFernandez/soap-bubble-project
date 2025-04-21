@@ -178,9 +178,7 @@ func (r *SoapBubbleMachineReconciler) deleteSoapBubbleMachine(ctx context.Contex
 	switchOffSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommand(
 		soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
 		soapBubbleMachine.Name,
-		soapBubbleMachine.Spec.StartURL,
-		soapBubbleMachine.Spec.StopURL,
-		soapBubbleMachine.Status.MakingBubbles,
+		soapBubbleMachine.Spec.IP,
 	)
 
 	if err := r.commandBus.Exec(ctx, switchOffSoapBubbleMachineCommand); err != nil {
@@ -228,9 +226,8 @@ func (r *SoapBubbleMachineReconciler) upsertSoapBubbleMachine(
 		switchOnSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOnSoapBubbleMachineCommand(
 			soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
 			soapBubbleMachine.Name,
-			soapBubbleMachine.Spec.StartURL,
-			soapBubbleMachine.Spec.StopURL,
-			soapBubbleMachine.Status.MakingBubbles,
+			soapBubbleMachine.Spec.IP,
+			soapBubbleMachine.Spec.Speed,
 		)
 
 		if err := r.commandBus.Exec(ctx, switchOnSoapBubbleMachineCommand); err != nil {
@@ -250,9 +247,7 @@ func (r *SoapBubbleMachineReconciler) upsertSoapBubbleMachine(
 		switchOffSoapBubbleMachineCommand := soapbubblemachineapplication.NewSwitchOffSoapBubbleMachineCommand(
 			soapbubblemachinedomain.NewSoapBubbleMachineID(soapBubbleMachine.Namespace, soapBubbleMachine.Name).String(),
 			soapBubbleMachine.Name,
-			soapBubbleMachine.Spec.StartURL,
-			soapBubbleMachine.Spec.StopURL,
-			soapBubbleMachine.Status.MakingBubbles,
+			soapBubbleMachine.Spec.IP,
 		)
 
 		if err := r.commandBus.Exec(ctx, switchOffSoapBubbleMachineCommand); err != nil {
